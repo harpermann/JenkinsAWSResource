@@ -1,0 +1,32 @@
+# YAML file to configure AWS resources from a Jenkins build
+#
+# Format:
+#   resource_name:
+#     type: <bucket, ecr, rds-postgres>
+#
+# Other parameters are fixed in the Jenkins build script.  
+#
+# Author:  Harper Mann
+#
+# Examples:
+#  harpers-bucket0:
+#    type: bucket
+#    locations: us-west-2
+#
+#  harpers-bucket1:
+#    type: bucket
+#    locations: us-west-2
+#
+#  harpers-bucket2:
+#    type: bucket
+#    locations: us-west-2
+#
+#  harpers-ecr1:
+#    type: ecr
+#
+#  harpersPG1:
+#    type: rds-postgres
+#
+#  harpersPG2:
+#    type: rds-postgres
+
