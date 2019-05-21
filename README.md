@@ -25,6 +25,8 @@ Requirements for the script:
 12.	Run the script silently with correct exit codes so it functions properly called from Jenkins scripts.
 13.	Provide a -v option to output relevant debug such as Policy and error codes.
 14.	The script should be idempotent and not do anything if the resource already exists.
+
+
 TL:DR (quick setup)
 1.	Install aws_resources.py somewhere Jenkins can run it.
 2.	Create a Security Group called “dev-rds-instance-postgres” which will be used in RDS creation. It can be named whatever, can be changed in the script or could be passed in as an arg.
