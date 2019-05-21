@@ -33,17 +33,21 @@ TL:DR (quick setup)
 
  
 3.	Create a yaml configuration file in the application repository (ie; “aws.yml”).  There is an example here: https://github.com/harpermann/JenkinsAWSResource/blob/master/aws.yml
-  		harpers-bucket0:
+  		
+    harpers-bucket0:
             type: bucket
             locations: us-west-2
         harpersPG1:
             type: rds-postgres
 4.	Add the python script to a CI/CD build in Jenkins with the path to the file in Jenkins workspace:
+
 ./aws_resources.py --config ./aws.yml
 
 5.	Run the build.  Can also test from CLI: 
+
 [hmann@jenkins]$ ./aws_resources.py --config ./aws.yml
 RDS Postgres Instance: harpersPG1 created
 Bucket: harpers-bucket0 created
+
 6.	Check the defined resource(s) were properly created.
 7.	Edit the script to change default parameters.
