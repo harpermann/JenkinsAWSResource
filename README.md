@@ -32,7 +32,7 @@ TL:DR (quick setup)
 2.	Create a Security Group called “dev-rds-instance-postgres” which will be used in RDS creation. It can be named whatever, can be changed in the script or could be passed in as an arg.
 
  
-3.	Create a yaml configuration file in the application repository (ie; “aws.yml”).  There is an example here: https://github.com/hmann-rms/work_in_progress/blob/master/aws.yml
+3.	Create a yaml configuration file in the application repository (ie; “aws.yml”).  There is an example here: https://github.com/harpermann/JenkinsAWSResource/blob/master/aws.yml
   		harpers-bucket0:
             type: bucket
             locations: us-west-2
