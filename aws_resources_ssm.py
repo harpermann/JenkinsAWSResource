@@ -19,6 +19,27 @@ RED   = '\033[0;31m'
 NC    = '\033[0m'
 
 # Policies
+BucketPolicy = """\
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Sid":"Application",
+      "Effect":"Allow",
+      "Action":"s3:*",
+      "Resource": [
+        "arn:aws:s3:::examplebucket",
+        "arn:aws:s3:::examplebucket/*"
+      ],
+      "Principal": {
+        "AWS": [
+          "arn:aws:iam::411497945720:root"
+        ]
+      }
+    }
+  ]
+} """
+
 ECRPolicyPre = """\
 { "Version": "2012-10-17", "Statement": [
     {
@@ -74,25 +95,39 @@ def get_ecr_policy(name):
 
 # S3
 def bucket(name, locations):
+    policy =  BucketPolicy.replace("examplebucket", name)
+
     if verbose:
         print "creating bucket " + name
         print "  locations " + locations
+        print "  bucket policy " + policy
 
     try:
-        s3_client.create_bucket(
+        response = s3_client.create_bucket(
             Bucket = name,
             CreateBucketConfiguration = {'LocationConstraint': locations}
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'BucketAlreadyOwnedByYou':
             if verbose:
-                print(BLUE + "  Bucket " + name  + " already exists" + NC)
+                print(BLUE + "  Bucket " + name  + " already exists" + NC + "\n")
         else:
             print "Bucket: " + name
             print("%sUnexpected error: %s%s" % (RED, e, NC))
             print ""
             return False
         return True
+
+    try:
+        response = s3_client.put_bucket_policy(
+            Bucket = name,
+            Policy = policy
+        )
+    except ClientError as e:
+        print "Bucket Policy: " + name
+        print("%sUnexpected error: %s%s" % (RED, e, NC))
+        print ""
+        return False
 
     print GREEN + "Bucket: " + name + " created" + NC
 
@@ -110,7 +145,7 @@ def ecr(name):
     except ClientError as e:
         if e.response['Error']['Code'] == 'RepositoryAlreadyExistsException':
             if verbose:
-                print(BLUE + "  ECR repository " + name  + " already exists" + NC)
+                print(BLUE + "  ECR repository " + name  + " already exists" + NC + "\n")
         else:
             print "ECR Repository: " + name
             print("$sUnexpected error: %s%s" % (RED, e, NC))
@@ -175,7 +210,6 @@ def rds_pg(name):
             print("%sUnexpected error: %s%s" % (RED, e, NC))
             print ""
             return False
-        return True
 
     # dB create
     try:
@@ -195,7 +229,7 @@ def rds_pg(name):
     except ClientError as e:
         if e.response['Error']['Code'] == 'DBInstanceAlreadyExists':
             if verbose:
-                print(BLUE + "  RDS Postgres DBInstance " + name  + " already exists" + NC)
+                print(BLUE + "  RDS Postgres DBInstance " + name  + " already exists" + NC + "\n")
         else:
             print "RDS postgres instance: " + name
             print("%sUnexpected error: %s%s" % (RED, e, NC))
@@ -208,7 +242,7 @@ def rds_pg(name):
 def usage():
     script = sys.argv[0]
     print "usage: " +  sys.argv[0] + " --config-file <config yml>"
-    print "    example: " +  sys.argv[0] + " --config-file aws.yml"
+    print GREEN + "    example: " +  sys.argv[0] + " --config-file aws.yml" + NC
     sys.exit(1)
 
 # The mains
